@@ -1,70 +1,67 @@
-# Getting Started with Create React App
+# Redux 연습장
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## 리덕스의 액션이란?
 
-## Available Scripts
+- 액션은 사실 그냥 객체(object)이다.
+- 두 가지 행태의 액션이 있다.
+  ```js
+  {
+    type: "TEST";
+  } // payload 없는 액션
+  ```
+  ```js
+  {type: 'TEST', params: 'hello'} // payload 있는 액션
+  ```
+- type 만이 필수 프로퍼티이며, type은 문자열이다.
 
-In the project directory, you can run:
+## 리덕스의 액션 생성자란 ?
 
-### `npm start`
+```js
+function 액션생성자(...args) {
+  return 액션;
+}
+```
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+- 액션을 생성하는 함수를 "액션 생성자(Action Creator")라고 한다.
+- 함수를 통해 액션을 생성해서, 액션 객체를 리턴해줍니다.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+```js
+createTest("hello"); // {type: "TEST", params: "hello"} 리턴
+```
 
-### `npm test`
+## 리덕스에서 액션이 하는 일
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+- 액션 생성자를 통해 액션을 만들어 낸다.
+- 만들어낸 액션 객체를 리덕스 스토어에 보낸다.
+- 리덕스 스토어가 액션 객체를 받으면 스토어의 상태 값이 변경된다.
+- 변경된 상태 값에 의해 상태를 이용하고 있는 컴포넌트가 변경된다.
+- 액션은 스토어에 보내는 일종의 인풋이라 생각할 수 있다!!
 
-### `npm run build`
+## 액션을 준비하기 위한 단계
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+1. 액션의 타입을 정의하여 변수로 빼는 단계
+   - 강제는 아니므로 안 해도된다
+   - 그냥 타입을 문자열로 넣기에는 실수를 유발할 가능성이 크다.
+   - 미리 정의한 변수를 사용하면, 스펠링에 주의를 덜 기울여도 된다.
+2. 액션 객체를 만들어 내는 함수를 만드는 단계
+   - 하나의 액션 객체를 만들기 위해 하나의 함수를 만들어낸다.
+   - 액션의 타입은 미리 정의한 타입 변수로부터 가져와 사용한다.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+<hr/>
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## 리덕스의 리듀서란
 
-### `npm run eject`
+- 액션을 주면, 그 액션이 적용되어 달라진 결과를 만들어 준다.
+- 그냥 함수이다.
+  - Pure Function
+  - Immutable
+    - 리듀서를 통해 state가 달라졌음을 리덕스가 인지하는 방식
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+```js
+function 리듀서(previousState, action) {
+  return newState;
+}
+```
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+- 액션을 받아서 state를 리턴하는 구조
+- 인자로 들어오는 priviousState와 리턴되는 newState는 다른 참조를 가지도록 해야한다.
