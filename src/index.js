@@ -3,7 +3,14 @@ import ReactDOM from "react-dom/client";
 import "./index.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
+import store from "./redux/store";
+import { addTodo } from "./redux/actions";
 
+store.subscribe(() => {
+  console.log(store.getState());
+});
+
+// console.log(store);
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>

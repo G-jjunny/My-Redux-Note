@@ -47,6 +47,19 @@ createTest("hello"); // {type: "TEST", params: "hello"} 리턴
    - 하나의 액션 객체를 만들기 위해 하나의 함수를 만들어낸다.
    - 액션의 타입은 미리 정의한 타입 변수로부터 가져와 사용한다.
 
+```js
+export const ADD_TODO = "ADD_TODO";
+
+// 모든 액션의 정의하고 액션 생성 함수를 만드는 곳이다.
+// 액션의 타입을 정의하고 액션의 생성자를 생성
+function addTodo(todo) {
+  return {
+    type: ADD_TODO,
+    todo: todo,
+  };
+}
+```
+
 <hr/>
 
 ## 리덕스의 리듀서란
@@ -65,3 +78,74 @@ function 리듀서(previousState, action) {
 
 - 액션을 받아서 state를 리턴하는 구조
 - 인자로 들어오는 priviousState와 리턴되는 newState는 다른 참조를 가지도록 해야한다.
+
+```js
+import { ADD_TODO } from "./actions";
+
+// state
+// ['코딩', '점심먹기'];
+
+const initialState = []; // 초기값을 설정
+
+export function todoApp(previousState = initialState, action) {
+  if (action.type === ADD_TODO) {
+    return [...previousState, action.todo];
+  }
+
+  return previousState; // 아무 변화가 없을 때 previousState반환
+}
+```
+
+<hr />
+
+## 스토어를 만드는 함수
+
+```js
+const store = createStore(리듀서);
+```
+
+createStore는 다음과 같이 3개의 인자가 들어간다.
+
+```js
+createStore<S>(
+    reducer: Reducer<S>, // 하나는 reducer함수 위의 todoApp과 같은 함수
+    preloaderState: S, // initialState를 넣을 수 있다.
+    enhancer?: StoreEnhancer<S>
+):Store<S>;
+```
+
+우선 다음과 같이 스토어를 생성하여 리듀서를 가져왔다.
+
+```js
+import { createStore } from "redux";
+import { todoApp } from "./reducers";
+
+const store = createStore(todoApp); //todoApp 리듀서를 가져와 store로 지정
+
+export default store;
+```
+
+그리고 이 store를 확인하기 위하여 index.js에서 콘솔을 찍어 확인을 해보면
+
+![](./src/Md/img/store_console.png)
+다음과 같은 객체들이 들어있는것을 볼 수 있다.
+다음 함수중 action을 인자로 가지는 dispatch함수가 있는데 이action를 생성을 해보려고한다.
+
+```js
+store.dispatch(addTodo("리덕스 공부하기!!"));
+```
+
+이 action을 변경을 할 때 직접 리터럴로 작성하는것이 아닌 action을 생성하는 함수인 addTodo를 실행하면서 todo를 넣어주면 action이 생성되면서 dispatch로 전달이되면서 store에 도착이된다.  
+그러면 store에서 state가 변경이 된다!  
+다음 결과를 index.js에서 콘솔로 찍어보면
+![](src/Md/img/createAction.png)
+이렇게 생성이 된 것을 볼 수 있다.
+
+## store의 기능
+
+- store.getState();
+- store.dispatch(액션);, store.dispatch(액션생성자());
+- const unsubscribe = store.subscribe(()=>{});
+  - 리턴이 unsubscribe라는 점
+  - unsubscribe();하면 제거
+- store.replaceReducer(다른리듀서);
