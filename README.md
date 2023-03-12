@@ -149,3 +149,5 @@ store.dispatch(addTodo("리덕스 공부하기!!"));
   - 리턴이 unsubscribe라는 점
   - unsubscribe();하면 제거
 - store.replaceReducer(다른리듀서);
+
+- 업로드중
