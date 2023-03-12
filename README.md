@@ -125,7 +125,7 @@ const store = createStore(todoApp); //todoApp 리듀서를 가져와 store로 �
 export default store;
 ```
 
-그리고 이 store를 확인하기 위하여 index.js에서 콘솔을 찍어 확인을 해보면
+그리고 이 store를 확인하기 위하여 index.js에서 콘솔을 찍어 확인을 해보자
 
 ![](./src/Md/img/store_console.png)
 다음과 같은 객체들이 들어있는것을 볼 수 있다.
